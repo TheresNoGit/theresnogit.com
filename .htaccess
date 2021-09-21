@@ -1,0 +1,12 @@
+# Check if the rewrite module is loaded
+<IfModule mod_rewrite.c>
+    # If the website is behind a proxy (e.g. Cloudflare)
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    # Only run if the connection is not already HTTPS
+    RewriteCond %{HTTPS} off
+    # Now redirect to the HTTPS version
+    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    # And then to the www if required
+    RewriteCond %{HTTP_HOST} !^www\. [NC]
+    RewriteRule (.*) https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
